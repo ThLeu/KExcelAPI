@@ -3,6 +3,7 @@
 
 # Known text files
 *.java text
+*.kt text
 *.xml text
 *.yml text
 *.md text

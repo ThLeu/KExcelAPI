@@ -1,14 +1,20 @@
-plugins {
-    id "application"
-    id "org.jetbrains.kotlin.jvm" version "1.2.41" // Resolving version from gradle.properties not supported yet
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.41'
+    }
 }
+
+apply plugin: "kotlin"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     compile "org.apache.poi:poi:$poi"
     compile "org.apache.poi:poi-ooxml:$poi"
