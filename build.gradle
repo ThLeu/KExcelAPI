@@ -1,16 +1,13 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.41'
-    }
+plugins {
+    id "com.jfrog.bintray" version "1.7.3"
+    id "maven-publish"
+    id "org.jetbrains.kotlin.jvm" version "1.2.41" // Resolving version from gradle.properties not supported yet
 }
 
-apply plugin: "kotlin"
-
 repositories {
+    mavenLocal()
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -29,4 +26,93 @@ sourceSets {
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+// Publishing
+version = '0.0.1'
+def projectName = 'KExcelAPI'
+def groupId = 'com.github.thleu'
+def artifactId = 'kexcelapi'
+def url = 'https://github.com/thleu'
+def userOrg = 'thleu'
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+javadoc.failOnError = false
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+def pomConfig = {
+    licenses {
+        license {
+            name "MIT License"
+            url "http://www.opensource.org/licenses/mit-license.php"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id "ThLeu"
+            name "Thomas Leu"
+            email "thomas.leu@gmail.com"
+            url = "$url"
+        }
+    }
+
+    scm {
+        url = "${url}/${projectName}"
+    }
+}
+
+publishing {
+    publications {
+        mavenPublication(MavenPublication) {
+            from components.java
+            artifact sourcesJar {
+                classifier "sources"
+            }
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+            groupId = "$groupId"
+            artifactId = "$artifactId"
+            version "$version"
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'An Excel API written in Kotlin built on top of Apache POI')
+                root.appendNode('name', "$projectName")
+                root.appendNode('url', "${url}/${projectName}e")
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintray {
+    user = System.getProperty('bintray.user')
+    key = System.getProperty('bintray.key')
+    publications = ['mavenPublication']
+
+    pkg {
+        repo = "$projectName"
+        name = "$projectName"
+        userOrg = "$userOrg"
+        licenses = ['MIT']
+        vcsUrl = "${url}/${projectName}.git"
+        version {
+            name = "$version"
+            desc = "$version"
+            released  = new Date()
+        }
+    }
 }
