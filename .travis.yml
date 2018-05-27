@@ -4,7 +4,12 @@ jdk:
 
 sudo: false
 
+addons:
+  sonarcloud:
+    organization: "thleu-github"
+
 before_install:
   - chmod +x gradlew
 after_success:
   - ./gradlew jacocoTestReport coveralls
+  - sonar-scanner
