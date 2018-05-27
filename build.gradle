@@ -21,6 +21,7 @@ dependencies {
     compile "org.apache.poi:poi-ooxml:$poi"
 
     testCompile "junit:junit:$junit"
+    testCompile "org.hamcrest:hamcrest-library:$hamcrest"
 }
 
 sourceSets {
