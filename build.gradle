@@ -46,10 +46,10 @@ jacocoTestReport {
 // Publishing
 version = '0.0.1'
 def projectName = 'KExcelAPI'
-def groupId = 'com.github.thleu'
-def artifactId = 'kexcelapi'
-def url = 'https://github.com/thleu'
-def userOrg = 'thleu'
+def repoGroupId = 'com.github.thleu'
+def repoArtifactId = 'kexcelapi'
+def repoUrl = 'https://github.com/thleu'
+def repoUserOrg = 'thleu'
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
@@ -80,12 +80,12 @@ def pomConfig = {
             id "ThLeu"
             name "Thomas Leu"
             email "thomas.leu@gmail.com"
-            url = "$url"
+            url "$repoUrl"
         }
     }
 
     scm {
-        url = "${url}/${projectName}"
+        url "${repoUrl}/${projectName}"
     }
 }
 
@@ -99,14 +99,14 @@ publishing {
             artifact javadocJar {
                 classifier "javadoc"
             }
-            groupId = "$groupId"
-            artifactId = "$artifactId"
+            groupId = "$repoGroupId"
+            artifactId = "$repoArtifactId"
             version "$version"
             pom.withXml {
                 def root = asNode()
                 root.appendNode('description', 'An Excel API written in Kotlin built on top of Apache POI')
                 root.appendNode('name', "$projectName")
-                root.appendNode('url', "${url}/${projectName}e")
+                root.appendNode('url', "${repoUrl}/${projectName}")
                 root.children().last() + pomConfig
             }
         }
@@ -121,9 +121,9 @@ bintray {
     pkg {
         repo = "$projectName"
         name = "$projectName"
-        userOrg = "$userOrg"
+        userOrg = "$repoUserOrg"
         licenses = ['MIT']
-        vcsUrl = "${url}/${projectName}.git"
+        vcsUrl = "${repoUrl}/${projectName}.git"
         version {
             name = "$version"
             desc = "$version"
